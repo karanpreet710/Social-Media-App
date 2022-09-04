@@ -22,9 +22,9 @@ function myFunction2(id) {
     $(`#show${id}`).empty()
     $.get(`/api/posts/comments?postId=${id}`, (comments) => {
       for (let c of comments) {
-        $(`#show${id}`).append($(`<li>
+        $(`#show${id}`).append($(`<li style="list-style:none;">
+        <span class="font-weight-bold">${c.user.username}</span>&nbsp;&nbsp;
         <span>${c.body}</span>&nbsp;&nbsp;&nbsp;
-        <span>-${c.user.username}</span>
         </li>`));
       }
     })
@@ -108,7 +108,7 @@ function loadPosts() {
                 <br>
                 <br>
                 <a id="anch${p.id}" href="#foo" class="card-link" onclick="myFunction2(${p.id})">Show Comments</a>
-                <ul id="show${p.id}" style="display:none;">
+                <ul id="show${p.id}" style="display:none;" class="list-group">
                 </ul>
                 <div id="post${p.id}" style="display:none;">
                 </div>

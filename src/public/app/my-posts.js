@@ -14,6 +14,28 @@ function myFunction(id) {
   }
 }
 
+function myFunction2(id) {
+  var list = document.getElementById(`show${id}`)
+  var anch = document.getElementById(`anch${id}`)
+  if (list.style.display === "none") {
+    list.style.display = "block"
+    $(`#show${id}`).empty()
+    $.get(`/api/posts/comments?postId=${id}`, (comments) => {
+      for (let c of comments) {
+        $(`#show${id}`).append($(`<li style="list-style:none;">
+        <span class="font-weight-bold">${c.user.username}</span>&nbsp;&nbsp;
+        <span>${c.body}</span>&nbsp;&nbsp;&nbsp;
+        </li>`));
+      }
+    })
+    anch.innerHTML = "Hide Comments"
+  }
+  else {
+    list.style.display = "none"
+    anch.innerHTML = "Show Comments"
+  }
+}
+
 function myFunction1(pid){
   var likeBtn = document.getElementById(`like${pid}`)
   const uid = JSON.parse(window.localStorage.user).id;
@@ -28,6 +50,31 @@ function myFunction1(pid){
     }
     //console.log(likes.length)
   })
+}
+
+function myFunction3(pid) {
+  var temp=document.getElementById(`post${pid}`)
+  if(temp.style.display==="none")
+  {
+    temp.style.display="block"
+    $(`#post${pid}`).empty()
+      $(`#post${pid}`).append($(`
+        <form>
+          <div class="form-group row">
+            <div class="col-xs-4 ml-2">
+              <input type="text" class="form-control" id="comm-body${pid}" placeholder="Write your comment here.....">
+            </div>
+            <div class="ml-2">
+              <button onclick="postFunction(${pid})" id="write-btn" class="btn btn-primary">Post</button>
+            </div>
+          </div>
+        </form>
+    `))
+  }
+  else
+  {
+    temp.style.display="none"
+  }
 }
 
 function loadMyPosts() {
@@ -48,9 +95,17 @@ function loadMyPosts() {
                   ${p.body.substr(0, 200)}<span id="dots${p.id}">...</span><span id="more${p.id}" style="display:none;">${p.body.substr(200)}</span>
                   <a href="#foo" id="myBtn${p.id}" onclick="myFunction(${p.id})">read more</a>
                 </p>
-                <a href="#" class="card-link">Comment</a>
+                <a href="#foo" class="card-link" onclick="myFunction3(${p.id})">Comment</a>
                 <a href="#foo" class="card-link" onclick="myFunction1(${p.id})">Like</a>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;❤️${cnt}</span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;❤️</span>
+                <span id="like${p.id}">${cnt}</span>
+                <br>
+                <br>
+                <a id="anch${p.id}" href="#foo" class="card-link" onclick="myFunction2(${p.id})">Show Comments</a>
+                <ul id="show${p.id}" style="display:none;" class="list-group">
+                </ul>
+                <div id="post${p.id}" style="display:none;">
+                </div>
               </div>
             </div>
           </div> 
